@@ -11,14 +11,19 @@ class m_user {
     }
 
     //创建新用户
-    createNewUser(account, password, name, sex, headimg) {
+    createNewUser(account, password, name) {
         this.reset();
-        this.redis.addPipelineCommand('select', g_redis_db.server_info);
-        this.redis.addPipelineCommand('incr', 'auto_incr_userid');
-        var ret = this.redis.execPipelineCommand();
 
-        if (ret.err == null && ret.result[1][1]) {
-            var userid = ret.result[1][1];
+        //查看是否有相同账号
+        var accountinfo = this.redis.get(g_redis_db.account_map, account);
+        if (accountinfo) {
+            this.reset();
+            return false;
+        }
+
+        //获取新的userid
+        var userid = this.redis.incr(g_redis_db.server_info, 'auto_incr_userid');
+        if (userid != null) {
             if (this.loadUserinfoByUserid(userid)) {
                 this.reset();
                 return false;
@@ -29,18 +34,22 @@ class m_user {
             return false;
         }
 
+        //获取配置信息
+        var initial_coins = this.redis.get(g_redis_db.server_info, 'initial_coins') == null;
+        initial_coins = initial_coins != null ? initial_coins : 0;
+        var initial_gems = this.redis.get(g_redis_db.server_info, 'initial_gems');
+        initial_gems = initial_gems != null ? initial_gems : 0;
+
         //当前时间戳
         var timestamp = Date.parse(new Date());
         this.account = account;
         this.password = utils.md5(password);
         this.name = name;
-        this.sex = sex;
-        this.headimg = headimg;
         this.signup_time = timestamp;
         this.signin_time = timestamp;
 
-        this.coins = 100;
-        this.gems = 999;
+        this.coins = initial_coins;
+        this.gems = initial_gems;
 
         this.saveAll();
 
@@ -89,12 +98,9 @@ class m_user {
      * @param {*} userid 
      */
     loadUserinfoByUserid(userid) {
-        this.redis.addPipelineCommand('select', g_redis_db.user_info);
-        this.redis.addPipelineCommand('get', userid);
-        var ret = this.redis.execPipelineCommand();
-        var result = ret.result[1][1];
-        if (ret.err == null && result[1][1]) {
-            var userinfo = JSON.parse(result[1][1]);
+        var userinfo = this.redis.get(g_redis_db.user_info, userid);
+        if (userinfo != null) {
+            userinfo = JSON.parse(userinfo);
             for (var key in userinfo) {
                 if (this[key]) {
                     this[key] = userinfo[key];
@@ -105,12 +111,9 @@ class m_user {
             return false;
         }
 
-        this.redis.addPipelineCommand('select', g_redis_db.account_map);
-        this.redis.addPipelineCommand('get', this.account);
-        var ret = this.redis.execPipelineCommand();
-        var result = ret.result[1][1];
-        if (ret.err == null && result[1][1]) {
-            var accountinfo = JSON.parse(result[1][1]);
+        var accountinfo = this.redis.get(g_redis_db.account_map, this.account);
+        if (accountinfo != null) {
+            accountinfo = JSON.parse(accountinfo);
             this.password = accountinfo.password;
         } else {
             this.reset();
@@ -126,12 +129,9 @@ class m_user {
      * @param {*} account 
      */
     loadUserinfoByAccount(account) {
-        var i = 0;
-        this.redis.addPipelineCommand('select', g_redis_db.account_map);
-        this.redis.addPipelineCommand('get', account);
-        var ret = this.redis.execPipelineCommand();
-        if (ret.err == null && ret.result[1][1]) {
-            var accountinfo = JSON.parse(ret.result[1][1]);
+        var accountinfo = this.redis.get(g_redis_db.account_map, account);
+        if (accountinfo != null) {
+            accountinfo = JSON.parse(accountinfo);
             this.userid = accountinfo.userid;
             this.account = accountinfo.account;
             this.password = accountinfo.password;
@@ -163,21 +163,15 @@ class m_user {
         }
 
         //写入账号表信息
-        this.redis.addPipelineCommand('select', g_redis_db.account_map);
         //构建账号信息
         var accountinfo = {
             userid: this.userid,
             account: this.account,
             password: this.password,
         }
-        this.redis.addPipelineCommand('set', account, JSON.stringify(accountinfo));
-
+        this.redis.set(g_redis_db.account_map, account, JSON.stringify(accountinfo));
         //写入玩家表
-        this.redis.addPipelineCommand('select', g_redis_db.user_info);
-        this.redis.addPipelineCommand('set', userid, JSON.stringify(this.getAttriObj()));
-
-        //执行命令
-        this.redis.execPipelineCommand();
+        this.redis.set(g_redis_db.user_info, userid, JSON.stringify(this.getAttriObj()));
 
         return true;
     }

@@ -157,14 +157,14 @@ class s_hall extends service {
         var account = data.account;
         var password = data.password;
         var name = data.name;
-        var sex = data.sex;
-        var headimg = data.headimg;
+        // var sex = data.sex;
+        // var headimg = data.headimg;
 
         var msg = {
             errorid: 0,
         };
         var i = 0;
-        if (this.checkNullValue([account, password, name, sex, headimg])) {
+        if (this.checkNullValue([account, password, name])) {
             msg.errorid = 1;
             this.send(res, msg);
             return;
@@ -178,7 +178,7 @@ class s_hall extends service {
         }
 
         var user = new m_user(this.redis, this.mysql);
-        if (!user.createNewUser(account, password, name, sex, headimg)) {
+        if (!user.createNewUser(account, password, name)) {
             //创建失败
             msg.errorid = 3;
             this.send(res, msg);

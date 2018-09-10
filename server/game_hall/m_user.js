@@ -35,7 +35,7 @@ class m_user {
         }
 
         //获取配置信息
-        var initial_coins = this.redis.get(g_redis_db.server_info, 'initial_coins') == null;
+        var initial_coins = this.redis.get(g_redis_db.server_info, 'initial_coins');
         initial_coins = initial_coins != null ? initial_coins : 0;
         var initial_gems = this.redis.get(g_redis_db.server_info, 'initial_gems');
         initial_gems = initial_gems != null ? initial_gems : 0;
@@ -44,7 +44,7 @@ class m_user {
         var timestamp = Date.parse(new Date());
         this.account = account;
         this.password = utils.md5(password);
-        this.name = name;
+        this.name = utils.toBase64(name);
         this.signup_time = timestamp;
         this.signin_time = timestamp;
 
@@ -102,9 +102,7 @@ class m_user {
         if (userinfo != null) {
             userinfo = JSON.parse(userinfo);
             for (var key in userinfo) {
-                if (this[key]) {
-                    this[key] = userinfo[key];
-                }
+                this[key] = userinfo[key];
             }
         } else {
             this.reset();

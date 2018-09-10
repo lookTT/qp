@@ -149,11 +149,6 @@ class s_hall extends service {
 
     signup(req, res) {
         var data = req.query;
-        var ip = req.ip;
-        if (ip.indexOf("::ffff:") != -1) {
-            ip = ip.substr(7);
-        }
-
         var account = data.account;
         var password = data.password;
         var name = data.name;
@@ -235,11 +230,6 @@ class s_hall extends service {
 
     signout(req, res) {
         var data = req.query;
-        var ip = req.ip;
-        if (ip.indexOf("::ffff:") != -1) {
-            ip = ip.substr(7);
-        }
-
         var userid = data.userid;
         var token = data.token;
 

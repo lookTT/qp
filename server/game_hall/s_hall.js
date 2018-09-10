@@ -230,7 +230,7 @@ class s_hall extends service {
         user.signin_time = timestamp;
 
         msg.info = user.getAttriObj();
-        this.send(res, 0, "ok", msg);
+        this.send(res, msg);
     }
 
     signout(req, res) {
@@ -260,7 +260,7 @@ class s_hall extends service {
         }
 
         this.delToken(userid);
-        this.send(res, 0, "ok", msg);
+        this.send(res, msg);
     }
 
 

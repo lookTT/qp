@@ -119,7 +119,7 @@ service crond restart
 mkdir /usr/share/nginx/html/headimg
 
 
-# 如果需要redis服务器
+# redis服务器
 # wget http://download.redis.io/releases/redis-4.0.11.tar.gz
 # tar zxvf redis-4.0.1.tar.gz
 # cd redis-4.0.1
@@ -148,6 +148,9 @@ mkdir /usr/share/nginx/html/headimg
     # requirepass fffabcd12345..11 #此处为想修改为的密码，可随意修改，并且requirepass前面没有井号则为起作用
 
 # redis-server /etc/redis.conf #启动redis
+
+# redis Windows 客户端工具
+# https://github.com/uglide/RedisDesktopManager/releases/download/0.8.8/redis-desktop-manager-0.8.8.384.exe
 
 
 

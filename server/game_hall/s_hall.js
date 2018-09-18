@@ -225,7 +225,8 @@ class s_hall extends service {
         }
 
         var timestamp = Date.parse(new Date());
-        this.refreshToken(utils.md5(account + password + timestamp));
+        user.token = utils.md5(account + password + timestamp);
+        this.refreshToken(user.token, user.userid);
         user.ip = ip;
         user.signin_time = timestamp;
 

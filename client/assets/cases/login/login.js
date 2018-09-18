@@ -16,7 +16,15 @@ cc.Class({
         }
 
         cc.qp.netMgr = require('netMgr');
-        cc.qp.netMgr.initHallNet();
+        cc.qp.netMgr.connect();
+
+        var userMgr = require('userMgr');
+        cc.qp.userMgr = new userMgr();
+
+        var utils = require('utils');
+        cc.qp.utils = new utils();
+
+        cc.args = cc.qp.utils.urlParse();
     },
 
     start() {
@@ -37,22 +45,22 @@ cc.Class({
         }
         Math.random = Math.seed(1234);
 
-        cc.qp.netMgr.sioHall.on("cs_pingpong", function (data) {
-            cc.log('cs_pingpong111');
-            cc.log(data);
-        });
+        // cc.qp.netMgr.sioHall.on("cs_pingpong", function (data) {
+        //     cc.log('cs_pingpong111');
+        //     cc.log(data);
+        // });
 
-        cc.qp.netMgr.sioHall.on("cs_pingpong", function (data) {
-            cc.log('cs_pingpong222');
-            cc.log(data);
-        });
+        // cc.qp.netMgr.sioHall.on("cs_pingpong", function (data) {
+        //     cc.log('cs_pingpong222');
+        //     cc.log(data);
+        // });
 
-        var data = {
-            msg: "cs_pingpong",
-            name: "abc",
-            sex: "1",
-        }
-        cc.qp.netMgr.send2HallBySIO('cs_pingpong', data);
+        // var data = {
+        //     msg: "cs_pingpong",
+        //     name: "abc",
+        //     sex: "1",
+        // }
+        // cc.qp.netMgr.send2HallBySIO('cs_pingpong', data);
 
         // var msg = {
         //     account: 'z1',
@@ -63,15 +71,29 @@ cc.Class({
         //     cc.log(ret);
         // });
 
-        var msg = {
-            account: 'z1',
-            password: '123456',
-        }
-        cc.qp.netMgr.send2HallByPost('signin', msg, function (ret) {
-            cc.log('send2HallByPost');
-            cc.log(ret);
-        });
+        // var msg = {
+        //     account: 'z1',
+        //     password: '123456',
+        // }
+        // cc.qp.netMgr.send2HallByPost('signin', msg, function (ret) {
+        //     cc.log('send2HallByPost');
+        //     cc.log(ret);
+        // });
     },
 
     // update (dt) {},
+
+    onClickGuestLogin(event) {
+        var account = cc.args.account;
+        if (account == null) {
+            account = cc.sys.localStorage.getItem("account");
+        }
+
+        if (account == null) {
+            account = Date.now();
+            cc.sys.localStorage.setItem("account", account);
+        }
+
+        cc.qp.userMgr.login(account, account);
+    }
 });

@@ -75,17 +75,17 @@
         "__id__": 8
       },
       {
-        "__id__": 11
+        "__id__": 12
       }
     ],
     "_active": true,
     "_level": 0,
     "_components": [
       {
-        "__id__": 14
+        "__id__": 15
       },
       {
-        "__id__": 15
+        "__id__": 16
       }
     ],
     "_prefab": null,
@@ -453,7 +453,11 @@
     },
     "duration": 0.1,
     "zoomScale": 1.2,
-    "clickEvents": [],
+    "clickEvents": [
+      {
+        "__id__": 11
+      }
+    ],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
     "_N$normalColor": {
@@ -494,6 +498,15 @@
     "_id": "8fdG5qPYdGaL/nIiNBOUoZ"
   },
   {
+    "__type__": "cc.ClickEvent",
+    "target": {
+      "__id__": 2
+    },
+    "component": "login",
+    "handler": "onClickGuestLogin",
+    "customEventData": ""
+  },
+  {
     "__type__": "cc.Node",
     "_name": "btn_wx",
     "_objFlags": 0,
@@ -505,10 +518,10 @@
     "_level": 1,
     "_components": [
       {
-        "__id__": 12
+        "__id__": 13
       },
       {
-        "__id__": 13
+        "__id__": 14
       }
     ],
     "_prefab": null,
@@ -562,7 +575,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 11
+      "__id__": 12
     },
     "_enabled": true,
     "_srcBlendFactor": 770,
@@ -590,7 +603,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 11
+      "__id__": 12
     },
     "_enabled": true,
     "transition": 3,
@@ -646,7 +659,7 @@
       "__uuid__": "29158224-f8dd-4661-a796-1ffab537140e"
     },
     "_N$target": {
-      "__id__": 11
+      "__id__": 12
     },
     "_id": "77bVoBZzFPyo4AkDDVFIek"
   },

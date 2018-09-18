@@ -41,13 +41,13 @@ var netMgr = cc.Class({
             netMgr.sioHall.isConnect = false;
 
             netMgr.sioHall.on("connect", function () {
-                cc.log('connect');
+                cc.log('sioHall connect');
                 netMgr.sioHall.isConnect = true;
 
                 //补发没发出去的消息
                 for (var key in netMgr.queueHall) {
                     var data = netMgr.queueHall[key];
-                    cc.log('socketio reissue ', data.p);
+                    // cc.log('socketio reissue ', data.p);
                     netMgr.sioHall.emit(data.p, data.m);
                 }
                 netMgr.queueHall = [];
@@ -56,10 +56,12 @@ var netMgr = cc.Class({
             });
 
             netMgr.sioHall.on('disconnect', function () {
+                cc.log('sioHall disconnect');
                 netMgr.sioHall.isConnect = false;
             });
 
             netMgr.sioHall.on('connect_error', function () {
+                cc.log('sioHall connect_error');
                 netMgr.sioHall.isConnect = false;
 
                 cbFailed();

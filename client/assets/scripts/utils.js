@@ -25,4 +25,12 @@ cc.Class({
         }
         return params;
     },
+
+    toBase64: function (content) {
+        return window.btoa(content);
+    },
+
+    fromBase64: function (content) {
+        return window.atob(content);
+    },
 });

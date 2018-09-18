@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.5302083333333333,
-      "y": 0.5302083333333333,
+      "x": 0.2933025674662669,
+      "y": 0.2933025674662669,
       "z": 1
     },
     "_quat": {
@@ -54,7 +54,7 @@
     },
     "_zIndex": 0,
     "groupIndex": 0,
-    "autoReleaseAssets": false,
+    "autoReleaseAssets": true,
     "_id": "7af57f3b-37a7-4591-a3c8-2d879375973e"
   },
   {
@@ -72,20 +72,20 @@
         "__id__": 5
       },
       {
-        "__id__": 8
+        "__id__": 7
       },
       {
-        "__id__": 12
+        "__id__": 11
       }
     ],
     "_active": true,
     "_level": 0,
     "_components": [
       {
-        "__id__": 15
+        "__id__": 14
       },
       {
-        "__id__": 16
+        "__id__": 15
       }
     ],
     "_prefab": null,
@@ -219,7 +219,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "login_bg",
+    "_name": "bg",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -230,9 +230,6 @@
     "_components": [
       {
         "__id__": 6
-      },
-      {
-        "__id__": 7
       }
     ],
     "_prefab": null,
@@ -246,8 +243,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 640,
-      "height": 960
+      "width": 750,
+      "height": 1468
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -279,7 +276,7 @@
     "_skewY": 0,
     "_zIndex": 0,
     "groupIndex": 0,
-    "_id": "fcroqGCsxAJ5G8yXfAX82l"
+    "_id": "20Wi2yC5lP3butGpsR4/hS"
   },
   {
     "__type__": "cc.Sprite",
@@ -295,7 +292,7 @@
       "__uuid__": "80a28747-e755-42f4-8e83-5d1bcab8e281"
     },
     "_type": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -307,34 +304,7 @@
     "_isTrimmedMode": true,
     "_state": 0,
     "_atlas": null,
-    "_id": "e3OQ/NlxhMyYi97gD3MIuE"
-  },
-  {
-    "__type__": "cc.Widget",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 5
-    },
-    "_enabled": true,
-    "alignMode": 1,
-    "_target": null,
-    "_alignFlags": 45,
-    "_left": 0,
-    "_right": 0,
-    "_top": 0,
-    "_bottom": 0,
-    "_verticalCenter": 0,
-    "_horizontalCenter": 0,
-    "_isAbsLeft": true,
-    "_isAbsRight": true,
-    "_isAbsTop": true,
-    "_isAbsBottom": true,
-    "_isAbsHorizontalCenter": true,
-    "_isAbsVerticalCenter": true,
-    "_originalWidth": 640,
-    "_originalHeight": 960,
-    "_id": "d8/EwKRrBMEIVdXvDNIkPj"
+    "_id": "a7bVbrMBVBF78u4RNN93VF"
   },
   {
     "__type__": "cc.Node",
@@ -348,10 +318,10 @@
     "_level": 1,
     "_components": [
       {
-        "__id__": 9
+        "__id__": 8
       },
       {
-        "__id__": 10
+        "__id__": 9
       }
     ],
     "_prefab": null,
@@ -405,7 +375,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 8
+      "__id__": 7
     },
     "_enabled": true,
     "_srcBlendFactor": 770,
@@ -433,7 +403,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 8
+      "__id__": 7
     },
     "_enabled": true,
     "transition": 3,
@@ -455,7 +425,7 @@
     "zoomScale": 1.2,
     "clickEvents": [
       {
-        "__id__": 11
+        "__id__": 10
       }
     ],
     "_N$interactable": true,
@@ -493,7 +463,7 @@
       "__uuid__": "29158224-f8dd-4661-a796-1ffab537140e"
     },
     "_N$target": {
-      "__id__": 8
+      "__id__": 7
     },
     "_id": "8fdG5qPYdGaL/nIiNBOUoZ"
   },
@@ -518,10 +488,10 @@
     "_level": 1,
     "_components": [
       {
-        "__id__": 13
+        "__id__": 12
       },
       {
-        "__id__": 14
+        "__id__": 13
       }
     ],
     "_prefab": null,
@@ -575,7 +545,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 12
+      "__id__": 11
     },
     "_enabled": true,
     "_srcBlendFactor": 770,
@@ -603,7 +573,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 12
+      "__id__": 11
     },
     "_enabled": true,
     "transition": 3,
@@ -659,7 +629,7 @@
       "__uuid__": "29158224-f8dd-4661-a796-1ffab537140e"
     },
     "_N$target": {
-      "__id__": 12
+      "__id__": 11
     },
     "_id": "77bVoBZzFPyo4AkDDVFIek"
   },

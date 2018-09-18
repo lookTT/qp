@@ -34,9 +34,6 @@ cc.Class({
         }
 
         cc.qp.netMgr.send2HallByPost('signin', msgSignin, function (retSignin) {
-            cc.log('send2HallByPost  signin');
-            cc.log(retSignin);
-
             if (retSignin.errorid == 0) {
                 //登陆成功
                 var info = retSignin.info;
@@ -44,7 +41,7 @@ cc.Class({
                 self.userid = info.userid;
                 self.account = info.account;
                 self.mask = info.mask;
-                self.userName = info.name;
+                self.userName = cc.qp.utils.fromBase64(info.name);
                 self.sex = info.sex;
                 self.headimg = info.headimg;
                 self.level = info.level;

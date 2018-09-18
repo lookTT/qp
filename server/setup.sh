@@ -166,4 +166,5 @@ cnpm install mysql
 cnpm install ioredis
 cnpm install request
 cnpm install socket.io
+cnpm install socket.io-client
 ########################################################

@@ -14,22 +14,25 @@ class s_hall extends service {
 
     onLoad() {
         //注册
-        this.app.get("/signup", function (req, res, next) {
+        this.app.post("/signup", function (req, res, next) {
             this.signup(req, res, next);
         }.bind(this));
 
         //登录
-        this.app.get("/signin", function (req, res, next) {
+        this.app.post("/signin", function (req, res, next) {
             this.signin(req, res, next);
         }.bind(this));
 
         //登出
-        this.app.get("/signout", function (req, res, next) {
+        this.app.post("/signout", function (req, res, next) {
             this.signout(req, res, next);
         }.bind(this));
 
+        //登录
+        this.addSocketIOHandler("cs_signin", this.csSingin.bind(this));
         //心跳
-        this.protocolLogicFunc["cs_pingpong"] = this.heartbeat.bind(this);
+        this.addSocketIOHandler("cs_pingpong", this.csPingPong.bind(this));
+
 
         super.onLoad(); //最后执行父类该方法
     }
@@ -148,7 +151,8 @@ class s_hall extends service {
     }
 
     signup(req, res) {
-        var data = req.query;
+        // var data = req.query; //GET 获取信息
+        var data = JSON.parse(req.body); //POST 获取信息
         var account = data.account;
         var password = data.password;
         var name = data.name;
@@ -185,7 +189,8 @@ class s_hall extends service {
     }
 
     signin(req, res) {
-        var data = req.query;
+        // var data = req.query; //GET 获取信息
+        var data = JSON.parse(req.body); //POST 获取信息
         var ip = req.ip;
         if (ip.indexOf("::ffff:") != -1) {
             ip = ip.substr(7);
@@ -229,7 +234,8 @@ class s_hall extends service {
     }
 
     signout(req, res) {
-        var data = req.query;
+        // var data = req.query; //GET 获取信息
+        var data = JSON.parse(req.body); //POST 获取信息
         var userid = data.userid;
         var token = data.token;
 
@@ -253,10 +259,35 @@ class s_hall extends service {
         this.send(res, msg);
     }
 
+    csSingin(socket, data) {
+        var userid = data.userid;
+        var token = data.token;
 
-    heartbeat(socket, data) {
-        var timestamp = Date.parse(new Date());
-        this.emit(socket, { msg: "cs_pingpong", ts: timestamp })
+        var ret = {
+            errorid: 0,
+            msg: "cs_signin",
+        };
+
+        if (this.checkNullValue([userid, token])) {
+            return;
+        }
+
+        if (!this.checkToken(token, userid)) {
+            return;
+        }
+
+        this.emit(socket, ret);
+    }
+
+    csPingPong(socket, data) {
+        console.log('csPingPong');
+        console.log(data);
+        var ret = {
+            errorid: 0,
+            msg: "cs_pingpong",
+            timestamp: Date.parse(new Date())
+        };
+        this.emit(socket, ret);
     }
 }
 

@@ -1,46 +1,15 @@
-var Fiber = require('fibers');
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-function sleep(ms) {
-    console.log('sleep... ' + new Date);
-    var fiber = Fiber.current;
-    setTimeout(function () {
-        console.log('sleep... run ' + new Date);
-        fiber.run();
-    }, ms);
-    console.log('sleep... yield ' + new Date);
-    Fiber.yield();
-}
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/index.html');
+});
 
-setTimeout(function () {
-    Fiber(function () {
-        console.log('wait... ' + new Date);
-        sleep(1000);
-        console.log('ok... ' + new Date);
-    }).run();
+io.on('connection', function (socket) {
+    console.log('a user connected');
+});
 
-}, 1000);
-
-
-
-function ddddsleep(ms) {
-    console.log('sleep!!!!!!!... ' + new Date);
-    var fiber = Fiber.current;
-    setTimeout(function () {
-        console.log('sleep!!!!!!!... run ' + new Date);
-        fiber.run();
-    }, ms);
-
-    console.log('sleep!!!!!!!... yield ' + new Date);
-    Fiber.yield();
-}
-setTimeout(function () {
-    Fiber(function () {
-        console.log('wait!!!!!!... ' + new Date);
-        ddddsleep(50);
-        console.log('ok!!!!!!!!!!!!... ' + new Date);
-    }).run();
-
-}, 1000);
-
-
-console.log('back in main');
+http.listen(3000, function () {
+    console.log('listening on *:3000');
+});

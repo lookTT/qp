@@ -6,11 +6,13 @@ class service {
 
         var bodyParser = require('body-parser');
         this.app = require('express')();
+        this.app.use(bodyParser.text());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.http = require('http').Server(this.app);
 
         this.io = require('socket.io')(this.http, {
+            serveClient: false,
             pingInterval: 10000,
             pingTimeout: 30000,
         });
@@ -47,12 +49,18 @@ class service {
     onLoad() {
         var self = this;
         this.io.on('connection', function (socket) {
-            socket.on('protocol', function (data) {
-                self.Fiber(function () {
-                    self.protocolLogicFunc[data.msg](socket, data);
-                }).run();
-            });
+
+            for (var protocol in self.protocolLogicFunc) {
+                var handler = self.protocolLogicFunc[protocol];
+                socket.on(protocol, function (data) {
+                    self.Fiber(function () {
+                        handler(socket, data);
+                    }).run();
+                });
+            }
+
         });
+
     }
 
     checkNullValue(parms) {
@@ -65,16 +73,30 @@ class service {
         return false;
     }
 
+    addSocketIOHandler(protocol, handler) {
+        this.protocolLogicFunc[protocol] = handler;
+    }
+
+    delSocketIOHandler(protocol) {
+        delete this.protocolLogicFunc[protocol];
+        this.protocolLogicFunc[protocol] = null;
+    }
+
+    clearSocketIOHandler() {
+        this.protocolLogicFunc = {};
+    }
+
     send(res, msg) {
-        if (msg == null) {
-            msg = {};
-        }
+        if (!msg) msg = {};
         var jsonstr = JSON.stringify(msg);
         res.send(jsonstr);
     }
 
     emit(socket, data) {
-        socket
+        if (!data) data = {};
+        if (!data.msg) return;
+        var jsonstr = JSON.stringify(data);
+        socket.emit(data.msg, jsonstr);
     }
 }
 

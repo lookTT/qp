@@ -4,6 +4,10 @@ class service {
     constructor(port, redisConfig, mysqlConfig) {
         var self = this;
 
+        this.HTTP = require('http');
+        this.HTTPS = require('https');
+        this.QS = require('querystring');
+
         var bodyParser = require('body-parser');
         this.app = require('express')();
         this.app.use(bodyParser.text());
@@ -19,6 +23,7 @@ class service {
 
         this.Fiber = require('fibers');
         this.http.listen(port);
+        this.port = port;
 
         //设置跨域访问
         this.app.all('*', function (req, res, next) {
@@ -43,6 +48,9 @@ class service {
         //处理协议对应的逻辑代码容器
         this.protocolLogicFunc = {};
 
+        //update间隔秒数
+        this._updateInterval = 1000; //默认值
+
         this.onLoad();
     }
 
@@ -61,6 +69,27 @@ class service {
 
         });
 
+        if (this._updateInterval >= 0) {
+            //设置一个简单的定时调用
+            setTimeout(this._update.bind(this), this._updateInterval);
+        }
+    }
+
+    _update() {
+        var self = this;
+        self.Fiber(function () {
+            self.update();
+        }).run();
+    }
+
+    update() {
+        //设置一个简单的定时调用
+        setTimeout(this._update.bind(this), this._updateInterval);
+    }
+
+    //毙掉update 但是需要在调用service类的onLoad之前调用
+    stopUpdate() {
+        this._updateInterval = -1;
     }
 
     checkNullValue(parms) {
@@ -98,6 +127,35 @@ class service {
         var jsonstr = JSON.stringify(data);
         socket.emit(data.msg, jsonstr);
     }
+
+    getRequest(host, port, path, data) {
+        var fiber = this.Fiber.current;
+        var ret = { errorid: 0 };
+        var options = {
+            hostname: host,
+            path: path + '?' + this.QS.stringify(data),
+            method: 'GET',
+            port: port,
+        };
+
+        var req = this.HTTP.request(options, function (res) {
+            res.setEncoding('utf8');
+            res.on('data', function (chunk) {
+                ret.data = JSON.parse(chunk);
+                fiber.run();
+            });
+        });
+
+        req.on('error', function (e) {
+            ret.errorid = -1;
+            ret.data = e;
+            fiber.run();
+        });
+        req.end();
+
+        this.Fiber.yield();
+        return ret;
+    };
 }
 
 module.exports = service;

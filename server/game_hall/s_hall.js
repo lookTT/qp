@@ -10,9 +10,16 @@ class s_hall extends service {
         this.mapUserByUserid = {}; //[userid]:user
         this.mapUseridByAccount = {}; //[account]:userid
         this.mapUseridByToken = {}; //[token]:userid
+
+        this.serviceMap = {}; // [serviceType]:[host+port:{host,port},host+port:{host,port}];
     }
 
     onLoad() {
+        //游戏节点注册
+        this.app.get("/register", function (req, res, next) {
+            this.register(req, res, next);
+        }.bind(this));
+
         //注册
         this.app.post("/signup", function (req, res, next) {
             this.signup(req, res, next);
@@ -33,6 +40,8 @@ class s_hall extends service {
         //心跳
         this.addSocketIOHandler("cs_pingpong", this.csPingPong.bind(this));
 
+        //不需要的话可以屏蔽掉update
+        this.stopUpdate();
 
         super.onLoad(); //最后执行父类该方法
     }
@@ -148,6 +157,38 @@ class s_hall extends service {
         }
 
         return this.mapUseridByToken[token] == userid;
+    }
+
+    register(req, res) {
+        var data = req.query; //GET 获取信息
+
+        var serviceType = data.type;
+        var servicePort = data.port;
+        var serviceIP = req.ip;
+        if (serviceIP.indexOf("::ffff:") != -1) {
+            serviceIP = serviceIP.substr(7);
+        }
+
+
+        if (!this.serviceMap[serviceType]) {
+            this.serviceMap[serviceType] = {};
+        }
+        if (!this.serviceMap[serviceType][serviceIP + ':' + servicePort]) {
+            this.serviceMap[serviceType][serviceIP + ':' + servicePort] = {}
+        }
+
+        var info = this.serviceMap[serviceType][serviceIP + ':' + servicePort]
+        info.host = serviceIP;
+        info.port = servicePort;
+        info.type = serviceType;
+
+        var msg = {
+            errorid: 0,
+        };
+
+        msg.info = { ip: serviceIP };
+
+        this.send(res, msg);
     }
 
     signup(req, res) {
@@ -281,8 +322,6 @@ class s_hall extends service {
     }
 
     csPingPong(socket, data) {
-        console.log('csPingPong');
-        console.log(data);
         var ret = {
             errorid: 0,
             msg: "cs_pingpong",

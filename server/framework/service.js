@@ -87,6 +87,16 @@ class service {
         setTimeout(this._update.bind(this), this._updateInterval);
     }
 
+    //设置update间隔
+    setUpdateInterval(v) {
+        v = parseInt(v);
+        if (v && v >= 0) {
+            this._updateInterval = v;
+        } else {
+            stopUpdate();
+        }
+    }
+
     //毙掉update 但是需要在调用service类的onLoad之前调用
     stopUpdate() {
         this._updateInterval = -1;

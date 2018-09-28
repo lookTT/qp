@@ -11,7 +11,9 @@ class s_game extends service {
         this.hallHost = hallHost;
         this.hallPort = hallPort;
 
-        this.interval = 0; //
+        this.interval = 0;
+
+        this.setUpdateInterval(33);
     }
 
     onLoad() {
